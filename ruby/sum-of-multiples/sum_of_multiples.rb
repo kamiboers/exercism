@@ -1,23 +1,19 @@
 class SumOfMultiples
 
-  def initialize(x=3, y=5, a=nil)
-    @x = x
-    @y = y
-    @a = a
+  def initialize(*args)
+    args.empty? ? @args = [3, 5] : @args = args.to_a
   end
 
-  def to(z)
-    (0...z).to_a.select do |number|
-      divisible(number)
+  def to(a)
+    (0...a).to_a.select do |number|
+      number if !non_multiple(number)
     end.inject(:+)
   end
 
-  def divisible(num)
-  if !@a
-    (num if num%@x == 0 || num%@y == 0)
-  else
-    (num if num%@x == 0 || num%@y == 0 || num%@a == 0)
-  end
+  def non_multiple(num)
+    @args.select do |arg|
+      arg if num%arg == 0
+    end.empty?
   end
 
 end

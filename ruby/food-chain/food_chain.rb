@@ -13,9 +13,6 @@ ACTIONS = ["", 	"It wriggled and jiggled and tickled inside her.",
 
 # refactor with case?
 
-def self.prepend(restrictions)
-end
-
 def self.song
 	@i = 0
 	@song = ""

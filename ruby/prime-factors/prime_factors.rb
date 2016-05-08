@@ -1,35 +1,44 @@
+require 'prime'
 class PrimeFactors
 
   def self.for(num)
-    @factors = []
-    num == 1 ? [] : find_factors(num)
+   num < 1000000 ? divide(num) : divide_big(num)
+ end
+
+ def self.divide(num, p=2, factors=[])
+  while num%p == 0
+    factors << p 
+    num /= p
   end
+  p = 2 ? p+=1 : p+=2
+  divide(num, p, factors) unless num == 1
+  factors
+end
 
-  def self.possible_prime_factors(num)
-    require 'pry'; binding.pry
-    (2..num).to_a.select { |num| num if num.odd? }.unshift(2)
-  end
-
-  def self.find_factors(num)
-    divisors = possible_prime_factors(num)
-
-    require 'pry'; binding.pry
-
-    until @factors.reduce(:*) == num
-      divisors.each do |div|
-        divide(num,div)
-      end
-    end
-
-    @factors
-  end
-
-  def self.divide(num, div)
-    if num%div == 0
-      @factors << div
-      num = num/div
-      divide(num, div)
+def self.divide_big(num, factors=[], x=100)
+  primes = sieve(x)
+  divisors = primes.select { |p| num%p == 0 }
+  f = divisors.shift
+  unless f.nil?
+    while num%f == 0
+      factors << f 
+      num /= f
     end
   end
+  Prime.prime?(num) ? (factors<<num) : divide_big(num, factors, 10*x)
+end
+
+def self.sieve(n, floor=3)
+  @numbers = (floor..n).to_a.select { |n| n if n.odd? }
+  @primes = [2]
+  remove_nonprime(@numbers)
+end
+
+def self.remove_nonprime(numbers)
+  p = numbers.shift
+  numbers = numbers.select { |num| num%p != 0 }
+  @primes << p
+  numbers.empty? ? @primes : remove_nonprime(numbers)
+end
 
 end
